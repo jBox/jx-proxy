@@ -6,6 +6,7 @@ const cv = require("config-vars");
 const { wx, api, admin, internal } = cv.env.router;
 const options = {
     target: "http://localhost:8080",
+    changeOrigin: true,
     router: {
         // when request.headers.host == "dev.localhost:3000",
         // override target "http://www.example.org" to "http://localhost:8000"
