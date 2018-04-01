@@ -3,15 +3,24 @@
 /**
  * Module dependencies.
  */
-const configuration = require("./configuration");
+const { env } = require("./configuration");
 const app = require("./app");
 const http = require("http");
+const https = require("https");
+const Path = require("path");
+const fs = require("fs");
+
+const httpsOptions = {
+  key: fs.readFileSync(Path.resolve(env.ssl.cert, "privatekey.pem")),
+  cert: fs.readFileSync(Path.resolve(env.ssl.cert, "certificate.pem"))
+};
 
 /**
  * Get port from environment and store in Express.
  */
 
-const port = normalizePort(configuration.env.port);
+const port = normalizePort(env.port);
+const httpsPort = normalizePort(env.ssl.port);
 app.set("port", port);
 
 /**
@@ -19,6 +28,7 @@ app.set("port", port);
  */
 
 const server = http.createServer(app);
+const httpsServer = https.createServer(app);
 
 /**
  * Listen on provided port, on all network interfaces.
@@ -27,6 +37,10 @@ const server = http.createServer(app);
 server.listen(port);
 server.on("error", onError);
 server.on("listening", onListening);
+
+httpsServer.listen(httpsPort);
+httpsServer.on("error", onError);
+httpsServer.on("listening", onSslListening);
 
 /**
  * Normalize a port into a number, string, or false.
@@ -82,6 +96,18 @@ function onError(error) {
 
 function onListening() {
   const addr = server.address();
+  const bind = typeof addr === "string"
+    ? "pipe " + addr
+    : "port " + addr.port;
+  console.log("Listening on " + bind);
+}
+
+/**
+ * Event listener for HTTPS server "listening" event.
+ */
+
+function onSslListening() {
+  const addr = httpsServer.address();
   const bind = typeof addr === "string"
     ? "pipe " + addr
     : "port " + addr.port;
