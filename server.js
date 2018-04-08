@@ -28,7 +28,7 @@ app.set("port", port);
  */
 
 const server = http.createServer(app);
-const httpsServer = https.createServer(app);
+const httpsServer = https.createServer(app, httpsOptions);
 
 /**
  * Listen on provided port, on all network interfaces.
