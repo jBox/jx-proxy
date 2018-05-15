@@ -6,21 +6,21 @@
 const { env } = require("./configuration");
 const app = require("./app");
 const http = require("http");
-const https = require("https");
+/* const https = require("https"); */
 const Path = require("path");
 const fs = require("fs");
 
-const httpsOptions = {
+/* const httpsOptions = {
   key: fs.readFileSync(Path.resolve(env.ssl.cert, "privatekey.pem")),
   cert: fs.readFileSync(Path.resolve(env.ssl.cert, "certificate.pem"))
-};
+}; */
 
 /**
  * Get port from environment and store in Express.
  */
 
 const port = normalizePort(env.port);
-const httpsPort = normalizePort(env.ssl.port);
+/* const httpsPort = normalizePort(env.ssl.port); */
 app.set("port", port);
 
 /**
@@ -28,7 +28,7 @@ app.set("port", port);
  */
 
 const server = http.createServer(app);
-const httpsServer = https.createServer(app, httpsOptions);
+/* const httpsServer = https.createServer(app, httpsOptions); */
 
 /**
  * Listen on provided port, on all network interfaces.
@@ -38,9 +38,9 @@ server.listen(port);
 server.on("error", onError);
 server.on("listening", onListening);
 
-httpsServer.listen(httpsPort);
+/* httpsServer.listen(httpsPort);
 httpsServer.on("error", onError);
-httpsServer.on("listening", onSslListening);
+httpsServer.on("listening", onSslListening); */
 
 /**
  * Normalize a port into a number, string, or false.
